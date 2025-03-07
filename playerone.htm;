@@ -1,0 +1,628 @@
+<?php
+// Save this file as index.php on your asdhacks.com server.
+?>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Historical Video Games - asdhacks.com</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f4f4f4;
+    }
+    header {
+      background: #333;
+      color: #fff;
+      padding: 10px 20px;
+      text-align: center;
+    }
+    nav {
+      background: #444;
+      padding: 10px;
+      text-align: center;
+    }
+    nav button {
+      margin: 5px;
+      padding: 10px 20px;
+      background: #666;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+    nav button.active {
+      background: #008CBA;
+    }
+    section {
+      display: none;
+      padding: 20px;
+    }
+    section.active {
+      display: block;
+    }
+    canvas {
+      background: #000;
+      display: block;
+      margin: 0 auto;
+    }
+    /* Modal styling */
+    .modal {
+      display: none; /* hidden by default */
+      position: fixed;
+      z-index: 999;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      overflow: auto; /* allow scroll if needed */
+    }
+    .modal-content {
+      background-color: #fff;
+      margin: 10% auto;
+      padding: 20px;
+      border-radius: 4px;
+      width: 80%;
+      max-width: 600px;
+      position: relative;
+    }
+    .modal-content h2 {
+      margin-top: 0;
+    }
+    .close {
+      color: #aaa;
+      font-size: 28px;
+      font-weight: bold;
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      cursor: pointer;
+    }
+    .close:hover,
+    .close:focus {
+      color: #000;
+    }
+    .learn-more-btn {
+      margin-left: 10px;
+      padding: 8px 16px;
+      cursor: pointer;
+      background: #555;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Historical Video Games</h1>
+    <p>Experience early video game concepts from the CRT Amusement Device, Tennis for Two, and Spacewar!</p>
+  </header>
+
+  <nav>
+    <button id="btnCRT" class="active" onclick="showGame('crt')">CRT Amusement Device</button>
+    <button id="btnTennis" onclick="showGame('tennis')">Tennis for Two</button>
+    <button id="btnSpacewar" onclick="showGame('spacewar')">Spacewar!</button>
+  </nav>
+
+  <!-- ===================================== -->
+  <!-- CRT Amusement Device Section -->
+  <!-- ===================================== -->
+  <section id="crt" class="active">
+    <h2>
+      Cathode-Ray Tube Amusement Device
+      <button class="learn-more-btn" onclick="openModal('modalCRT')">Learn More</button>
+    </h2>
+    <canvas id="crtCanvas" width="500" height="300"></canvas>
+    <div style="text-align:center; margin-top:10px;">
+      <label for="angle">Angle:</label>
+      <input type="range" id="angle" min="0" max="90" value="45">
+      <button onclick="fireCRT()">Fire!</button>
+    </div>
+  </section>
+
+  <!-- ===================================== -->
+  <!-- Tennis for Two Section -->
+  <!-- ===================================== -->
+  <section id="tennis">
+    <h2>
+      Tennis for Two
+      <button class="learn-more-btn" onclick="openModal('modalTennis')">Learn More</button>
+    </h2>
+    <canvas id="tennisCanvas" width="500" height="300"></canvas>
+    <p style="text-align:center;">
+      Control Left Paddle: Up/Down Arrows | Control Right Paddle: W/S
+    </p>
+  </section>
+
+  <!-- ===================================== -->
+  <!-- Spacewar! Section -->
+  <!-- ===================================== -->
+  <section id="spacewar">
+    <h2>
+      Spacewar!
+      <button class="learn-more-btn" onclick="openModal('modalSpacewar')">Learn More</button>
+    </h2>
+    <canvas id="spacewarCanvas" width="500" height="300"></canvas>
+    <p style="text-align:center;">
+      <strong>Player 1 (Green, left side)</strong>:  
+       Rotate: A/D &emsp; Thrust: W &emsp; Fire: Q<br><br>
+      <strong>Player 2 (Red, right side)</strong>:  
+       Rotate: Left/Right Arrows &emsp; Thrust: Up Arrow &emsp; Fire: Spacebar
+    </p>
+  </section>
+
+  <!-- ===================================== -->
+  <!-- Modals for Historical Info -->
+  <!-- ===================================== -->
+
+  <!-- CRT Modal -->
+  <div id="modalCRT" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('modalCRT')">&times;</span>
+      <h2>Cathode-Ray Tube Amusement Device</h2>
+      <p>
+        The Cathode-Ray Tube Amusement Device (patented in 1948 by Thomas T. Goldsmith Jr. and Estle Ray Mann) 
+        is considered one of the earliest interactive electronic games. Players controlled a beam on the screen 
+        using knobs, attempting to hit targets. Though purely analog (not digital), it paved the way for future 
+        video games.
+      </p>
+    </div>
+  </div>
+
+  <!-- Tennis for Two Modal -->
+  <div id="modalTennis" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('modalTennis')">&times;</span>
+      <h2>Tennis for Two</h2>
+      <p>
+        Created in 1958 by William Higinbotham at Brookhaven National Laboratory, Tennis for Two displayed 
+        a simplified tennis match on an oscilloscope. Players used dial-based controllers to serve and 
+        return the ball. It's often cited as a groundbreaking demonstration of interactive electronic entertainment.
+      </p>
+    </div>
+  </div>
+
+  <!-- Spacewar! Modal -->
+  <div id="modalSpacewar" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('modalSpacewar')">&times;</span>
+      <h2>Spacewar!</h2>
+      <p>
+        Spacewar! was developed in 1962 by a team at MIT on a DEC PDP-1 computer. Two players controlled 
+        spaceships, firing torpedoes while maneuvering around a central star's gravity. It spread quickly 
+        to universities, inspiring future arcade games and shaping the roots of the modern gaming industry.
+      </p>
+    </div>
+  </div>
+
+  <script>
+    // ============================
+    // Show/hide sections
+    // ============================
+    function showGame(gameId) {
+      const sections = document.querySelectorAll('section');
+      sections.forEach(section => section.classList.remove('active'));
+      document.getElementById(gameId).classList.add('active');
+      
+      const buttons = document.querySelectorAll('nav button');
+      buttons.forEach(btn => btn.classList.remove('active'));
+      document.querySelector('nav button[onclick="showGame(\'' + gameId + '\')"]').classList.add('active');
+    }
+
+    // ============================
+    // Modals: Open/Close
+    // ============================
+    function openModal(modalId) {
+      const modal = document.getElementById(modalId);
+      if (modal) {
+        modal.style.display = "block";
+      }
+    }
+    function closeModal(modalId) {
+      const modal = document.getElementById(modalId);
+      if (modal) {
+        modal.style.display = "none";
+      }
+    }
+    // Close modal if user clicks outside content
+    window.onclick = function(event) {
+      const modals = document.querySelectorAll('.modal');
+      modals.forEach(modal => {
+        if (event.target === modal) {
+          modal.style.display = "none";
+        }
+      });
+    };
+    // Close modal on Esc key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        const modals = document.querySelectorAll('.modal');
+        modals.forEach(m => m.style.display = "none");
+      }
+    });
+
+    // ============================
+    // CRT Amusement Device
+    // ============================
+    const crtCanvas = document.getElementById('crtCanvas');
+    const crtCtx = crtCanvas.getContext('2d');
+    let crtAnimation;
+    function fireCRT() {
+      cancelAnimationFrame(crtAnimation);
+      let angle = parseFloat(document.getElementById('angle').value);
+      angle = angle * Math.PI / 180; // convert degrees to radians
+      
+      const speed = 5;
+      let x = 50;
+      let y = crtCanvas.height - 30;
+      let vx = speed * Math.cos(angle);
+      let vy = -speed * Math.sin(angle);
+      const gravity = 0.1;
+
+      function animate() {
+        // Clear
+        crtCtx.fillStyle = "#000";
+        crtCtx.fillRect(0, 0, crtCanvas.width, crtCanvas.height);
+        
+        // Draw projectile
+        crtCtx.fillStyle = "#0f0";
+        crtCtx.beginPath();
+        crtCtx.arc(x, y, 5, 0, Math.PI * 2);
+        crtCtx.fill();
+        
+        // Update
+        x += vx;
+        y += vy;
+        vy += gravity;
+
+        // Continue while in bounds
+        if (x < crtCanvas.width && y < crtCanvas.height) {
+          crtAnimation = requestAnimationFrame(animate);
+        }
+      }
+      animate();
+    }
+
+    // ============================
+    // Tennis for Two
+    // ============================
+    const tennisCanvas = document.getElementById('tennisCanvas');
+    const tennisCtx = tennisCanvas.getContext('2d');
+
+    let tennisBall = {
+      x: tennisCanvas.width / 2,
+      y: tennisCanvas.height / 2,
+      vx: 2,
+      vy: 2,
+      radius: 5
+    };
+    let leftPaddle = {
+      x: 10,
+      y: tennisCanvas.height / 2 - 30,
+      width: 10,
+      height: 60
+    };
+    let rightPaddle = {
+      x: tennisCanvas.width - 20,
+      y: tennisCanvas.height / 2 - 30,
+      width: 10,
+      height: 60
+    };
+
+    function drawTennis() {
+      // Clear
+      tennisCtx.fillStyle = "#000";
+      tennisCtx.fillRect(0, 0, tennisCanvas.width, tennisCanvas.height);
+
+      // Draw ball
+      tennisCtx.fillStyle = "#fff";
+      tennisCtx.beginPath();
+      tennisCtx.arc(tennisBall.x, tennisBall.y, tennisBall.radius, 0, Math.PI * 2);
+      tennisCtx.fill();
+
+      // Draw paddles
+      tennisCtx.fillRect(leftPaddle.x, leftPaddle.y, leftPaddle.width, leftPaddle.height);
+      tennisCtx.fillRect(rightPaddle.x, rightPaddle.y, rightPaddle.width, rightPaddle.height);
+
+      // Move ball
+      tennisBall.x += tennisBall.vx;
+      tennisBall.y += tennisBall.vy;
+
+      // Bounce top/bottom
+      if (tennisBall.y - tennisBall.radius < 0 || tennisBall.y + tennisBall.radius > tennisCanvas.height) {
+        tennisBall.vy = -tennisBall.vy;
+      }
+
+      // Paddle collisions
+      // Left paddle
+      if (
+        tennisBall.x - tennisBall.radius < leftPaddle.x + leftPaddle.width &&
+        tennisBall.y > leftPaddle.y &&
+        tennisBall.y < leftPaddle.y + leftPaddle.height
+      ) {
+        tennisBall.vx = -tennisBall.vx;
+      }
+      // Right paddle
+      if (
+        tennisBall.x + tennisBall.radius > rightPaddle.x &&
+        tennisBall.y > rightPaddle.y &&
+        tennisBall.y < rightPaddle.y + rightPaddle.height
+      ) {
+        tennisBall.vx = -tennisBall.vx;
+      }
+
+      // If offscreen left/right, reset
+      if (tennisBall.x < 0 || tennisBall.x > tennisCanvas.width) {
+        tennisBall.x = tennisCanvas.width / 2;
+        tennisBall.y = tennisCanvas.height / 2;
+        tennisBall.vx = 2;
+        tennisBall.vy = 2;
+      }
+
+      requestAnimationFrame(drawTennis);
+    }
+    drawTennis();
+
+    // Paddle controls
+    document.addEventListener('keydown', function(e) {
+      // Left paddle => Arrow Up/Down
+      if (e.key === 'ArrowUp') {
+        leftPaddle.y = Math.max(0, leftPaddle.y - 10);
+      } else if (e.key === 'ArrowDown') {
+        leftPaddle.y = Math.min(tennisCanvas.height - leftPaddle.height, leftPaddle.y + 10);
+      }
+      // Right paddle => W/S
+      if (e.key.toLowerCase() === 'w') {
+        rightPaddle.y = Math.max(0, rightPaddle.y - 10);
+      } else if (e.key.toLowerCase() === 's') {
+        rightPaddle.y = Math.min(tennisCanvas.height - rightPaddle.height, rightPaddle.y + 10);
+      }
+    });
+
+    // ============================
+    // Spacewar! (Exploding Ships)
+    // ============================
+    const spacewarCanvas = document.getElementById('spacewarCanvas');
+    const spacewarCtx = spacewarCanvas.getContext('2d');
+
+    // Explosion
+    let explosions = [];
+    class Explosion {
+      constructor(x, y, color) {
+        this.x = x;
+        this.y = y;
+        this.color = color;
+        this.radius = 0;
+        this.maxRadius = 30;
+        this.alpha = 1.0;
+      }
+      update() {
+        this.radius += 1.5;
+        this.alpha -= 0.04;
+      }
+      draw(ctx) {
+        ctx.save();
+        ctx.globalAlpha = this.alpha;
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    class Torpedo {
+      constructor(x, y, angle, color) {
+        this.x = x;
+        this.y = y;
+        this.angle = angle;
+        this.speed = 3;
+        this.color = color;
+        this.radius = 2;
+        this.life = 200; // frames
+      }
+      update() {
+        this.x += this.speed * Math.cos(this.angle);
+        this.y += this.speed * Math.sin(this.angle);
+        // Wrap edges
+        if (this.x < 0) this.x = spacewarCanvas.width;
+        if (this.x > spacewarCanvas.width) this.x = 0;
+        if (this.y < 0) this.y = spacewarCanvas.height;
+        if (this.y > spacewarCanvas.height) this.y = 0;
+
+        this.life--;
+      }
+      draw(ctx) {
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    class Spaceship {
+      constructor(x, y, color, controls) {
+        this.x = x;
+        this.y = y;
+        this.angle = 0;
+        this.vx = 0;
+        this.vy = 0;
+        this.color = color;
+        this.controls = controls;
+        this.radius = 12;
+        this.torpedoes = [];
+      }
+      draw(ctx) {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.angle);
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.moveTo(15, 0);
+        ctx.lineTo(-10, 10);
+        ctx.lineTo(-10, -10);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        // friction
+        this.vx *= 0.99;
+        this.vy *= 0.99;
+        // wrap edges
+        if (this.x < 0) this.x = spacewarCanvas.width;
+        if (this.x > spacewarCanvas.width) this.x = 0;
+        if (this.y < 0) this.y = spacewarCanvas.height;
+        if (this.y > spacewarCanvas.height) this.y = 0;
+      }
+      thrust() {
+        const force = 0.1;
+        this.vx += force * Math.cos(this.angle);
+        this.vy += force * Math.sin(this.angle);
+      }
+      rotate(direction) {
+        this.angle += direction * 0.1;
+      }
+      fire() {
+        const torp = new Torpedo(this.x, this.y, this.angle, this.color);
+        this.torpedoes.push(torp);
+      }
+    }
+
+    // Player 1 (Green, left)
+    const spaceship1 = new Spaceship(
+      100,
+      spacewarCanvas.height / 2,
+      "#0f0",
+      { left: 'a', right: 'd', up: 'w', fire: 'q' }
+    );
+    // Player 2 (Red, right)
+    const spaceship2 = new Spaceship(
+      spacewarCanvas.width - 100,
+      spacewarCanvas.height / 2,
+      "#f00",
+      { left: 'ArrowLeft', right: 'ArrowRight', up: 'ArrowUp', fire: ' ' }
+    );
+
+    // Collision detection
+    function checkCollisions() {
+      // Torpedoes from spaceship1 hitting spaceship2
+      for (let i = spaceship1.torpedoes.length - 1; i >= 0; i--) {
+        const torp = spaceship1.torpedoes[i];
+        const dx = spaceship2.x - torp.x;
+        const dy = spaceship2.y - torp.y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < spaceship2.radius + torp.radius) {
+          // Explosion on spaceship2
+          explosions.push(new Explosion(spaceship2.x, spaceship2.y, spaceship2.color));
+          // Reset spaceship2
+          spaceship2.x = spacewarCanvas.width - 100;
+          spaceship2.y = spacewarCanvas.height / 2;
+          spaceship2.vx = 0;
+          spaceship2.vy = 0;
+          // Remove torpedo
+          spaceship1.torpedoes.splice(i, 1);
+        }
+      }
+      // Torpedoes from spaceship2 hitting spaceship1
+      for (let j = spaceship2.torpedoes.length - 1; j >= 0; j--) {
+        const torp = spaceship2.torpedoes[j];
+        const dx = spaceship1.x - torp.x;
+        const dy = spaceship1.y - torp.y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < spaceship1.radius + torp.radius) {
+          // Explosion on spaceship1
+          explosions.push(new Explosion(spaceship1.x, spaceship1.y, spaceship1.color));
+          // Reset spaceship1
+          spaceship1.x = 100;
+          spaceship1.y = spacewarCanvas.height / 2;
+          spaceship1.vx = 0;
+          spaceship1.vy = 0;
+          // Remove torpedo
+          spaceship2.torpedoes.splice(j, 1);
+        }
+      }
+    }
+
+    function updateTorpedoes(ship) {
+      for (let i = ship.torpedoes.length - 1; i >= 0; i--) {
+        const torp = ship.torpedoes[i];
+        torp.update();
+        // If torpedo life is over, remove it
+        if (torp.life <= 0) {
+          ship.torpedoes.splice(i, 1);
+        } else {
+          torp.draw(spacewarCtx);
+        }
+      }
+    }
+
+    function drawSpacewar() {
+      // Clear
+      spacewarCtx.fillStyle = "#000";
+      spacewarCtx.fillRect(0, 0, spacewarCanvas.width, spacewarCanvas.height);
+
+      // Explosions
+      for (let i = explosions.length - 1; i >= 0; i--) {
+        explosions[i].update();
+        explosions[i].draw(spacewarCtx);
+        if (explosions[i].alpha <= 0) {
+          explosions.splice(i, 1);
+        }
+      }
+
+      // Draw ships
+      spaceship1.draw(spacewarCtx);
+      spaceship2.draw(spacewarCtx);
+
+      // Torpedoes
+      updateTorpedoes(spaceship1);
+      updateTorpedoes(spaceship2);
+
+      // Movement
+      spaceship1.update();
+      spaceship2.update();
+
+      // Collisions
+      checkCollisions();
+
+      requestAnimationFrame(drawSpacewar);
+    }
+    drawSpacewar();
+
+    // Key bindings
+    document.addEventListener('keydown', function(e) {
+      // Player 1 => a, d, w, q
+      if (e.key.toLowerCase() === spaceship1.controls.left) {
+        spaceship1.rotate(-1);
+      }
+      if (e.key.toLowerCase() === spaceship1.controls.right) {
+        spaceship1.rotate(1);
+      }
+      if (e.key.toLowerCase() === spaceship1.controls.up) {
+        spaceship1.thrust();
+      }
+      if (e.key.toLowerCase() === spaceship1.controls.fire) {
+        spaceship1.fire();
+      }
+
+      // Player 2 => ArrowLeft, ArrowRight, ArrowUp, Space
+      if (e.key === spaceship2.controls.left) {
+        spaceship2.rotate(-1);
+      }
+      if (e.key === spaceship2.controls.right) {
+        spaceship2.rotate(1);
+      }
+      if (e.key === spaceship2.controls.up) {
+        spaceship2.thrust();
+      }
+      if (e.key === spaceship2.controls.fire) {
+        spaceship2.fire();
+      }
+    });
+  </script>
+</body>
+</html>
