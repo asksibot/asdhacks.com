@@ -1,0 +1,191 @@
+<?php
+// index.php
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ASD Hacks - JS Tabs</title>
+  <link rel="stylesheet" href="styles/main.css">
+</head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L8K6L34JRM"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-L8K6L34JRM');
+</script>
+<body>
+
+  <!-- Floating Buy Me a Coffee widget (optional) -->
+  <div class="buymeacoffee-widget">
+    <a href="https://www.buymeacoffee.com/asdhacks.com" target="_blank">
+      ☕ Buy Me a Coffee
+    </a>
+  </div>
+
+  <!-- Horizontal tab bar for large screens, vertical for small (handled by CSS) -->
+  <div class="navbar tabs">
+    <button class="tablink" onclick="openPage('homeTab', this)" id="defaultOpen">Home</button>
+    <button class="tablink" onclick="openPage('chapter1Tab', this)">Chapter 1</button>
+    <button class="tablink" onclick="openPage('chapter2Tab', this)">Chapter 2</button>
+    <button class="tablink" onclick="openPage('chapter3Tab', this)">Chapter 3</button>
+    <button class="tablink" onclick="openPage('chapter4Tab', this)">Chapter 4</button>
+    <button class="tablink" onclick="openPage('chapter5Tab', this)">Chapter 5</button>
+    <button class="tablink" onclick="openPage('chapter6Tab', this)">Chapter 6</button>
+    <button class="tablink" onclick="openPage('resourceHubTab', this)">Resource Hub</button>
+    <button class="tablink" onclick="openPage('libraryTab', this)">Library</button>
+    <button class="tablink" onclick="openPage('aboutTab', this)" class="welcome-btn">Welcome to ASD Hacks!</button>
+    <!-- This extra button also points to Chapter 1 -->
+    <button class="tablink" onclick="openPage('chapter1Tab', this)" id="chapter1TabBtn">Chapter 1</button>
+  </div>
+
+  <div class="container">
+    <!-- HOME CONTENT -->
+    <div id="homeTab" class="tabcontent">
+      <h1>Hackers break down complex systems into smaller, understandable parts.</h1>
+      <p>
+        Life works the same way. By learning to “hack” these systems—school, social rules, daily routines—you can discover adaptive strategies that transform challenges into opportunities.
+      </p>
+      <p><strong>Click the tabs above to navigate chapters, or “Welcome to ASD Hacks!” to see disclaimers, etc.</strong></p>
+
+   <!-- CHAPTER BUTTONS SECTION -->
+<div class="chapter-buttons-container">
+
+  <!-- Chapter 1 -->
+  <div class="chapter-row">
+    <button class="button chapter-button" onclick="openPage('chapter1Tab', this)">Chapter 1</button>
+    <div class="chapter-description">
+      <strong>Understanding Systems</strong><br>
+      Life is code. Break down the world’s “programs,” learn when to follow rules—or bend them.
+    </div>
+  </div>
+
+  <!-- Chapter 2 -->
+  <div class="chapter-row">
+    <button class="button chapter-button" onclick="openPage('chapter2Tab', this)">Chapter 2</button>
+    <div class="chapter-description">
+      <strong>Social Engineering for Good</strong><br>
+      Decode social rules like reverse-engineering software. Use scripts & shared activities to connect.
+    </div>
+  </div>
+
+  <!-- Chapter 3 -->
+  <div class="chapter-row">
+    <button class="button chapter-button" onclick="openPage('chapter3Tab', this)">Chapter 3</button>
+    <div class="chapter-description">
+      <strong>Optimizing Learning</strong><br>
+      Hack school. Identify your study style, use productivity tools, and debug common learning issues.
+    </div>
+  </div>
+
+  <!-- Chapter 4 -->
+  <div class="chapter-row">
+    <button class="button chapter-button" onclick="openPage('chapter4Tab', this)">Chapter 4</button>
+    <div class="chapter-description">
+      <strong>Managing Sensory Overload</strong><br>
+      Build sensory firewalls & filters. Find patches for overwhelming situations and run your “safe mode.”
+    </div>
+  </div>
+
+  <!-- Chapter 5 -->
+  <div class="chapter-row">
+    <button class="button chapter-button" onclick="openPage('chapter5Tab', this)">Chapter 5</button>
+    <div class="chapter-description">
+      <strong>Building a Hacker Network</strong><br>
+      No hacker is an island. Join clubs, find allies, and set boundaries to avoid draining malware connections.
+    </div>
+  </div>
+
+  <!-- Chapter 6 -->
+  <div class="chapter-row">
+    <button class="button chapter-button" onclick="openPage('chapter6Tab', this)">Chapter 6</button>
+    <div class="chapter-description">
+      <strong>Ethical Hacking Your Future</strong><br>
+      Your strengths are in demand. Explore careers, find mentors, and keep iterating on your path.
+    </div>
+  </div>
+
+  <!-- Chapter 7 -->
+  <div class="chapter-row">
+    <button class="button chapter-button" onclick="openPage('resourceHubTab', this)">Chapter 7</button>
+    <div class="chapter-description">
+      <strong>Program Tools & Resources</strong><br>
+      HTML trackers, rating scales, and other tools to customize for your own hacking journey.
+    </div>
+  </div>
+
+</div>
+<!-- END CHAPTER BUTTONS SECTION -->
+
+    </div>
+
+    <!-- CHAPTER 1 CONTENT (PHP include) -->
+    <div id="chapter1Tab" class="tabcontent">
+      <?php include "chapters/chapter1.php"; ?>
+    </div>
+
+    <!-- CHAPTER 2 CONTENT -->
+    <div id="chapter2Tab" class="tabcontent">
+      <?php include "chapters/chapter2.php"; ?>
+    </div>
+
+    <!-- CHAPTER 3 CONTENT -->
+    <div id="chapter3Tab" class="tabcontent">
+      <?php include "chapters/chapter3.php"; ?>
+    </div>
+
+    <!-- CHAPTER 4 CONTENT -->
+    <div id="chapter4Tab" class="tabcontent">
+      <?php include "chapters/chapter4.php"; ?>
+    </div>
+
+    <!-- CHAPTER 5 CONTENT -->
+    <div id="chapter5Tab" class="tabcontent">
+      <?php include "chapters/chapter5.php"; ?>
+    </div>
+
+    <!-- CHAPTER 6 CONTENT -->
+    <div id="chapter6Tab" class="tabcontent">
+      <?php include "chapters/chapter6.php"; ?>
+    </div>
+
+    <!-- CHAPTER 7 CONTENT (Resource Hub) -->
+    <div id="resourceHubTab" class="tabcontent">
+      <?php include "chapters/chapter7.php"; ?>
+    </div>
+  </div>
+
+  <div id="libraryTab" class="tabcontent">
+    <?php include "library/books.php"; ?>
+  </div>
+
+  <div id="aboutTab" class="tabcontent">
+    <?php include "info/about.php"; ?>
+  </div>
+
+  <!-- Floating Buy Me a Coffee widget (Hidden by default, JavaScript will toggle visibility) -->
+  <div class="buymeacoffee-widget" id="buymeacoffee">
+    <a href="https://www.buymeacoffee.com/asdhacks.com" target="_blank">
+      ☕ Buy Me a Coffee
+    </a>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-links">
+      <a href="/sitemap.php">Sitemap</a>
+      <a href="/info/terms.php">Terms &amp; Conditions</a>
+      <a href="/info/cookies.php">Cookies</a>
+      <a href="/info/privacy.php">Privacy</a>
+      <a href="/info/contact.php">Contact</a>
+    </div>
+    <p>&copy; 2023 ASD Hacks. All rights reserved.</p>
+  </footer>
+
+  <!-- Link to your JavaScript for tab handling -->
+  <script src="scripts/tabs.js"></script>
+</body>
+</html>
