@@ -1,0 +1,360 @@
+<?php 
+// This PHP file outputs the complete HTML page.
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lunar Lander 1969</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: 'Share Tech Mono', monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden; /* Prevent scrollbars from appearing during the game */
+        }
+
+        #terminal {
+            width: 800px; /* Or whatever width you like */
+            height: 600px; /* Or whatever height you like */
+            border: 2px solid #fff;
+            padding: 10px;
+            overflow-y: auto; /* Allow scrolling if the output gets too long */
+        }
+
+        #output {
+            white-space: pre-wrap; /* Wrap text */
+            word-wrap: break-word;
+            line-height: 1.2;
+        }
+
+        #input-line {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        #input-line span {
+            margin-right: 5px;
+        }
+
+        #input {
+            background-color: #000;
+            border: none;
+            color: #fff;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 16px;
+            width: 100%; /* Take up remaining space */
+            outline: none; /* Remove the default focus outline */
+        }
+
+        /* Modal Styles */
+        #modal-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal {
+            background-color: #111;
+            border: 2px solid #fff;
+            padding: 20px;
+            max-width: 80%; /* Limit modal width */
+            max-height: 80%;
+            overflow: auto;
+            position: relative;
+        }
+
+        .modal img {
+            max-width: 100%;
+            max-height: 100%;
+            display: block;  /* Remove extra spacing around img */
+            margin: 0 auto;
+        }
+
+        .close-btn{
+            position: absolute;
+            top:10px;
+            right:10px;
+            color: white;
+            cursor: pointer;
+            font-size: 24px;
+        }
+        /* Slashed Zero style font */
+        .slashed-zero {
+            position: relative;
+            display: inline-block;
+        }
+
+        .slashed-zero::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 1px; /* Adjust thickness of the slash */
+            background-color: #fff; /* Match text color */
+            transform: rotate(-25deg); /* Adjust angle of the slash */
+        }
+    </style>
+</head>
+<body>
+    <div id="terminal">
+        <pre id="output"></pre>
+        <div id="input-line">
+            <span>></span>
+            <input type="text" id="input" autofocus>
+        </div>
+    </div>
+
+    <div id="modal-container">
+        <div class="modal" id="modal1">
+          <span class="close-btn">×</span>
+          <img src="https://github.com/fortran-gaming/lunar-lander-1969/blob/main/docs/LunarLanderSampleOutputPage1.jpg?raw=true" alt="1969 Fail Output">
+        </div>
+        <div class="modal" id="modal2">
+          <span class="close-btn">×</span>
+           <img src="https://github.com/fortran-gaming/lunar-lander-1969/blob/main/docs/LunarLanderSampleOutputPage2.jpg?raw=true"  alt="1969 Success Output">
+        </div>
+         <div class="modal" id="modal3">
+          <span class="close-btn">×</span>
+          <pre id="basic-code"></pre>
+        </div>
+    </div>
+
+    <script>
+const output = document.getElementById('output');
+const input = document.getElementById('input');
+const modalContainer = document.getElementById('modal-container');
+const modals = document.querySelectorAll('.modal');
+const closeButtons = document.querySelectorAll('.close-btn');
+const basicCode = document.getElementById('basic-code');
+
+// Game variables (initial values)
+let altitude = 120;   // Miles
+let velocity = 1;     // Miles per second
+let fuel = 16500;
+let time = 0;         // Seconds
+let burnRate = 0;
+const gravity = 0.001; // Miles per second squared (scaled down)
+const shipWeight = 33000;
+let seconds = 0;
+let v = 0;
+
+// Modal BASIC code
+const codeString = `REM http://www.vintage-basic.net/bcg/lunar.bas
+10 PRINT TAB(33);"LUNAR"
+20 PRINT TAB(15);"CREATIVE COMPUTING  MORRISTOWN, NEW JERSEY"
+25 PRINT: PRINT: PRINT
+30 PRINT "THIS IS A COMPUTER SIMULATION OF AN APOLLO LUNAR"
+40 PRINT "LANDING CAPSULE.": PRINT: PRINT
+50 PRINT "THE ON-BOARD COMPUTER HAS FAILED (IT WAS MADE BY"
+60 PRINT "XEROX) SO YOU HAVE TO LAND THE CAPSULE MANUALLY."
+70 PRINT: PRINT "SET BURN RATE OF RETRO ROCKETS TO ANY VALUE BETWEEN"
+80 PRINT "0 (FREE FALL) AND 200 (MAXIMUM BURN) POUNDS PER SECOND."
+90 PRINT "SET NEW BURN RATE EVERY 10 SECONDS.": PRINT
+100 PRINT "CAPSULE WEIGHT 32,500 LBS; FUEL WEIGHT 16,500 LBS."
+110 PRINT: PRINT: PRINT: PRINT "GOOD LUCK"
+120 L=0
+130 PRINT: PRINT "SEC","MI + FT","MPH","LB FUEL","BURN RATE":PRINT
+140 A=120:V=1:M=33000:N=16500:G=1E-03:Z=1.8
+150 PRINT L,INT(A);INT(5280*(A-INT(A))),3600*V,M-N:INPUT K:T=10
+160 IF M-N<1E-03 THEN 240
+170 IF T<1E-03 THEN 150
+180 S=T: IF M>=N+S*K THEN 200
+190 S=(M-N)/K
+200 GOSUB 420: IF I<=0 THEN 340
+210 IF V<=0 THEN 230
+220 IF J<0 THEN 370
+230 GOSUB 330: GOTO 160
+240 PRINT "FUEL OUT AT";L;"SECONDS":S=(-V+SQR(V*V+2*A*G))/G
+250 V=V+G*S: L=L+S
+260 W=3600*V: PRINT "ON MOON AT";L;"SECONDS - IMPACT VELOCITY";W;"MPH"
+274 IF W<=1.2 THEN PRINT "PERFECT LANDING!": GOTO 440
+280 IF W<=10 THEN PRINT "GOOD LANDING (COULD BE BETTER)":GOTO 440
+282 IF W>60 THEN 300
+284 PRINT "CRAFT DAMAGE... YOU'RE STRANDED HERE UNTIL A RESCUE"
+286 PRINT "PARTY ARRIVES.  HOPE YOU HAVE ENOUGH OXYGEN!"
+288 GOTO 440
+300 PRINT "SORRY THERE WERE NO SURVIVORS.  YOU BLOW IT!"
+310 PRINT "IN FACT, YOU BLASTED A NEW LUNAR CRATER";W*.227;"FEET DEEP!"
+320 GOTO 440
+330 L=L+S: T=T-S: M=M-S*K: A=I: V=J: RETURN
+340 IF S<5E-03 THEN 260
+350 D=V+SQR(V*V+2*A*(G-Z*K/M)):S=2*A/D
+360 GOSUB 420: GOSUB 330: GOTO 340
+370 W=(1-M*G/(Z*K))/2: S=M*V/(Z*K*(W+SQR(W*W+V/Z)))+.05:GOSUB 420
+380 IF I<=0 THEN 340
+390 GOSUB 330: IF J>0 THEN 160
+400 IF V>0 THEN 370
+410 GOTO 160
+420 Q=S*K/M: J=V+G*S+Z*(-Q-Q*Q/2-Q^3/3-Q^4/4-Q^5/5)
+430 I=A-G*S*S/2-V*S+Z*S*(Q/2+Q^2/6+Q^3/12+Q^4/20+Q^5/30):RETURN
+440 END
+`;
+
+function initGame() {
+    altitude = 120;
+    velocity = 1;
+    fuel = 16500;
+    time = 0;
+    burnRate = 0;
+    // Initial game instructions
+    println("LUNAR LANDER SIMULATION");
+    println("CREATIVE COMPUTING  MORRISTOWN, NEW JERSEY");
+    println("THIS IS A COMPUTER SIMULATION OF AN APOLLO LUNAR");
+    println("LANDING CAPSULE.");
+    println("");
+    println("THE ON-BOARD COMPUTER HAS FAILED (IT WAS MADE BY");
+    println("XEROX) SO YOU HAVE TO LAND THE CAPSULE MANUALLY.");
+    println("");
+    println("SET BURN RATE OF RETRO ROCKETS TO ANY VALUE BETWEEN");
+    println("0 (FREE FALL) AND 200 (MAXIMUM BURN) POUNDS PER SECOND.");
+    println("SET NEW BURN RATE EVERY 10 SECONDS.");
+    println("");
+    println("CAPSULE WEIGHT 32,500 LBS; FUEL WEIGHT 16,500 LBS.");
+    println("");
+    println("GOOD LUCK");
+    println("--------------------------------------------------");
+    println("");
+    println("Press 1 for 1969 Fail Example.");
+    println("Press 2 for 1969 Success Example");
+    println("Press 3 for original Basic Code");
+    printStatus();
+}
+
+function println(text) {
+    const slashedText = text.replace(/0/g, '<span class="slashed-zero">0</span>');
+    output.innerHTML += slashedText + '\n';
+    output.scrollTop = output.scrollHeight;
+}
+
+function printStatus() {
+    const altitudeFt = Math.round((altitude - Math.floor(altitude)) * 5280);
+    const velocityMph = Math.round(velocity * 3600);
+    println(`TIME: ${time} S  ALTITUDE: ${Math.floor(altitude)} MI ${altitudeFt} FT  VELOCITY: ${velocityMph} MPH  FUEL: ${fuel} LB  BURN: ${burnRate}`);
+}
+
+function updateGame(dt) {
+    if (burnRate > 200) {
+        burnRate = 200;
+        println("*** ALERT: MAX BURN RATE IS 200 ***");
+    }
+
+    let fuelUsed = (fuel > 0) ? burnRate * dt : 0;
+    fuel = Math.max(0, fuel - fuelUsed);
+    const effectiveBurn = fuel > 0 ? burnRate : 0;
+    seconds = (burnRate > 0 && fuel > 0) ? Math.min(10, fuel / burnRate) : 10;
+    const weight = shipWeight + fuel;
+    const thrust = (effectiveBurn * 1.8) / weight;
+    const netGravity = gravity - thrust;
+    const newVelocity = velocity + netGravity * seconds;
+    const avgVelocity = (velocity + newVelocity) / 2;
+    altitude -= avgVelocity * seconds;
+    velocity = newVelocity;
+    time += seconds;
+
+    if (fuel <= 0 && velocity > 0 && altitude > 0) {
+        println("*** FUEL DEPLETED ***");
+        seconds = velocity / gravity;
+        v = velocity + gravity * seconds;
+        const a = (velocity + v) / 2;
+        altitude -= a * seconds;
+        velocity = v;
+        time += seconds;
+    }
+
+    if (altitude <= 0) {
+        altitude = 0;
+        const impactVelocity = Math.round(velocity * 3600);
+        println(`LANDED - IMPACT VELOCITY: ${impactVelocity} MPH`);
+        if (impactVelocity <= 1.2) {
+            println("PERFECT LANDING!");
+        } else if (impactVelocity <= 10) {
+            println("GOOD LANDING (COULD BE BETTER)");
+        } else if (impactVelocity <= 60) {
+            println("CRAFT DAMAGE... YOU'RE STRANDED HERE UNTIL A RESCUE");
+            println("PARTY ARRIVES.  HOPE YOU HAVE ENOUGH OXYGEN!");
+        } else {
+            println("SORRY, THERE WERE NO SURVIVORS.  YOU BLEW IT!");
+            println(`IN FACT, YOU BLASTED A NEW LUNAR CRATER ${Math.round(impactVelocity * 0.227)} FT DEEP!`);
+        }
+        println("Restarting in 10 seconds...");
+        setTimeout(initGame, 10000);
+        return false;
+    }
+    return true;
+}
+
+input.addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        const inputValue = input.value; // Get the value as a string
+
+        // Check for modal commands FIRST
+        if (inputValue === '1') {
+            modalContainer.style.display = 'flex';
+            modals[0].style.display = "block";
+            input.value = ''; // Clear input
+            return; // Stop processing
+        } else if (inputValue === '2') {
+            modalContainer.style.display = 'flex';
+            modals[1].style.display = "block";
+            input.value = '';
+            return;
+        } else if (inputValue === '3') {
+            basicCode.innerText = codeString;
+            modalContainer.style.display = 'flex';
+            modals[2].style.display = 'block';
+            input.value = '';
+            return;
+        }
+
+        // THEN, if not a modal command, process as a number.
+        const numericInput = parseFloat(inputValue);
+
+        if (!isNaN(numericInput) && numericInput >= 0) {
+            burnRate = numericInput;
+        } else {
+            println("*** INVALID INPUT.  ENTER A NUMBER >= 0 ***");
+            input.value = '';
+            printStatus();
+            return;
+        }
+
+        if (updateGame(10)) {
+            printStatus();
+        }
+        input.value = '';
+    }
+});
+
+closeButtons.forEach((button, index) => {
+    button.addEventListener('click', () => {
+        modalContainer.style.display = 'none';
+        modals.forEach(modal => modal.style.display = "none");
+        if (index === 2) {
+            basicCode.innerText = "";
+        }
+    });
+});
+
+initGame();
+    </script>
+</body>
+</html>
